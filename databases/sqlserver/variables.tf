@@ -19,3 +19,8 @@ variable "ports" {
     external = 1433
   }
 }
+
+variable "network-details" {
+  type    = object({ name = string })
+  default = { name = "" }
+}

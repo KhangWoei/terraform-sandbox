@@ -24,5 +24,8 @@ resource "docker_container" "sqlserver" {
     external = var.ports.external
   }
   env = ["MSSQL_SA_PASSWORD=${var.environment_variables.mssql_sa_password}", "MSSQL_PID=${var.environment_variables.mssql_pid}"]
+  networks_advanced {
+    name = var.network-details.name
+  }
 }
 
