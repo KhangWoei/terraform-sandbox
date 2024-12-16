@@ -1,3 +1,9 @@
+locals {
+  version = {
+    "latest" = "mcr.microsoft.com/mssql/server:2022-latest"
+  }
+}
+
 terraform {
   required_providers {
     docker = {
@@ -13,11 +19,11 @@ provider "docker" {
 
 # SqlServer Database
 resource "docker_image" "sqlserver" {
-  name = "mcr.microsoft.com/mssql/server:2022-latest"
+  name = local.version[var.image-version]
 }
 
 resource "docker_container" "sqlserver" {
-  name  = "sqlserver"
+  name  = "sqlserver:${var.image-version}"
   image = docker_image.sqlserver.image_id
   ports {
     internal = var.ports.internal

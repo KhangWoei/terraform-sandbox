@@ -1,3 +1,9 @@
+variable "image-version" {
+  type    = string
+  default = "latest"
+
+}
+
 variable "environment_variables" {
   type = object({
     mssql_sa_password = string
