@@ -9,7 +9,8 @@ module "network" {
 }
 
 module "sqlserver" {
-  source = "./databases/sqlserver"
+  source          = "./databases/sqlserver"
+  network-details = { name = local.network-name }
 }
 
 
