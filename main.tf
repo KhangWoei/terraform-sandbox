@@ -13,4 +13,3 @@ module "sqlserver" {
   network-details = { name = local.network-name }
 }
 
-
