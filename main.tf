@@ -13,3 +13,8 @@ module "sqlserver" {
   network-details = { name = local.network-name }
 }
 
+module "postgres" {
+  source          = "./databases/postgresql"
+  network-details = { name = local.network-name }
+}
+

@@ -1,6 +1,8 @@
 locals {
   version = {
-    "latest" = "mcr.microsoft.com/mssql/server:2022-latest"
+    "2022" = "mcr.microsoft.com/mssql/server:2022-latest",
+    "2019" = "mcr.microsoft.com/mssql/server:2019-latest",
+    "2017" = "mcr.microsoft.com/mssql/server:2017-latest"
   }
 }
 

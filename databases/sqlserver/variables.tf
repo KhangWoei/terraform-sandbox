@@ -1,6 +1,6 @@
 variable "image-version" {
   type    = string
-  default = "latest"
+  default = "2022"
 
 }
 
