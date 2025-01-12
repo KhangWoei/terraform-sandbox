@@ -40,6 +40,6 @@ resource "docker_container" "postgres" {
     type   = "bind"
   }
   healthcheck {
-    test = ["CMD", "/var/scripts/health-check.sh"]
+    test = ["CMD", "/var/scripts/health-check.sh", var.environment_variables.postgres_user]
   }
 }
