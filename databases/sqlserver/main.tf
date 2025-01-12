@@ -4,6 +4,7 @@ locals {
     "2019" = "mcr.microsoft.com/mssql/server:2019-latest",
     "2017" = "mcr.microsoft.com/mssql/server:2017-latest"
   }
+  container_name = "sqlserver-${var.image-version}"
 }
 
 terraform {
@@ -25,7 +26,7 @@ resource "docker_image" "sqlserver" {
 }
 
 resource "docker_container" "sqlserver" {
-  name  = "sqlserver-${var.image-version}"
+  name  = local.container_name
   image = docker_image.sqlserver.image_id
   ports {
     internal = var.ports.internal
@@ -41,7 +42,7 @@ resource "docker_container" "sqlserver" {
     type   = "bind"
   }
   healthcheck {
-    test = ["CMD", "/var/scripts/health-check.sh"]
+    test = ["CMD", "/var/scripts/health-check.sh", local.container_name, var.image-version, var.environment_variables.mssql_sa_password]
   }
 }
 
