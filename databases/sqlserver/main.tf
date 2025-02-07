@@ -46,3 +46,6 @@ resource "docker_container" "sqlserver" {
   }
 }
 
+output "connection_string" {
+  value = "Data Source=${local.container_name},${var.ports.external};User ID=sa;Password=${var.environment_variables.mssql_sa_password};TrustServerCertificate=True;" 
+}

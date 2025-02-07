@@ -4,6 +4,7 @@ locals {
     "16" = "postgres:16",
     "15" = "postgres:15"
   }
+  container_name = "postgres-${var.image-version}"
 }
 
 terraform {
@@ -24,7 +25,7 @@ resource "docker_image" "postgres" {
 }
 
 resource "docker_container" "postgres" {
-  name  = "postgres-${var.image-version}"
+  name  = local.container_name
   image = docker_image.postgres.image_id
   ports {
     internal = var.ports.internal
@@ -42,4 +43,8 @@ resource "docker_container" "postgres" {
   healthcheck {
     test = ["CMD", "/var/scripts/health-check.sh", var.environment_variables.postgres_user]
   }
+}
+
+output "connection_string" {
+  value = "Host=${local.container_name},${var.ports.external};User ID=${var.environment_variables.postgres_user};Password=${var.environment_variables.postgres_password};Database=postgres"
 }
