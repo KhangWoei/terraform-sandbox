@@ -38,7 +38,7 @@ resource "docker_container" "sqlserver" {
   }
   mounts {
     target = "/var/scripts"
-    source = "E:/Projects/terraform-sandbox/databases/sqlserver/scripts"
+    source = "${path.cwd}/${path.module}/scripts"
     type   = "bind"
   }
   healthcheck {

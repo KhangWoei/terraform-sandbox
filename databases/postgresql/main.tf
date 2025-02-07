@@ -36,7 +36,7 @@ resource "docker_container" "postgres" {
   }
   mounts {
     target = "/var/scripts"
-    source = "E:/Projects/terraform-sandbox/databases/postgresql/scripts"
+    source = "${path.cwd}/${path.module}/scripts"
     type   = "bind"
   }
   healthcheck {
