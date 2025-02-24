@@ -1,6 +1,7 @@
 #!/bin/bash
 
 artifacts_dir=$1
+outputs_dir=$2
 
 # Get assembly names, for now it's just the names of all the files/dircs in the artifact folder
 artifact_names=($(ls "${artifacts_dir}"))
@@ -19,8 +20,5 @@ done
 
 
 # For each dll, run dotnet test against it.
-for artifact_path in "${artifact_paths[@]}"
-do
-    echo "${artifact_path}"
-done
-
+log_file_path="${outputs_dir}/TestResults.xml"
+dotnet test --diag:log.txt --no-build --configuration Release --logger:"junit;LogFileName=${log_file_path}" "${artifact_paths[@]}"

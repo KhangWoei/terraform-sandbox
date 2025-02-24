@@ -31,6 +31,11 @@ resource "docker_container" "test_runner" {
     source = "${path.cwd}/${path.module}/artifacts"
     type   = "bind"
   }
+  mounts {
+    target = "/var/outputs"
+    source = "${path.cwd}/${path.module}/outputs"
+    type   = "bind"
+  }
   must_run = true
-  command  = ["/var/scripts/run.sh", var.connection-string, "/var/artifacts"]
+  command  = ["/var/scripts/run.sh", var.connection-string, "/var/artifacts", "var/outputs"]
 }
