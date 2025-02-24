@@ -21,4 +21,4 @@ done
 
 # For each dll, run dotnet test against it.
 log_file_path="${outputs_dir}/TestResults.xml"
-dotnet test --diag:log.txt --no-build --configuration Release --logger:"junit;LogFileName=${log_file_path}" "${artifact_paths[@]}"
+dotnet test --no-build --configuration Release --logger:"junit;LogFileName=${log_file_path}" "${artifact_paths[@]}"
