@@ -15,8 +15,6 @@
 
 FROM container-registry.oracle.com/os/oraclelinux:8-slim
 
-ENV MYSQL_ROOT_PASSWORD=P455w07d!
-
 ARG MYSQL_SERVER_PACKAGE=mysql-community-server-minimal-8.3.0
 ARG MYSQL_SHELL_PACKAGE=mysql-shell-8.3.0
 
