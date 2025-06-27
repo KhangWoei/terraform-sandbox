@@ -1,12 +1,6 @@
 # Use a base image (you can choose an appropriate base image for your scripts)
 FROM mcr.microsoft.com/mssql/server:2022-latest
 
-# Set environment variables
-ENV ACCEPT_EULA=Y 
-ENV SA_PASSWORD=P455w07d! 
-ENV MSSQL_PID=Developer 
-ENV MSSQL_TCP_PORT=1433 
-
 # Set the working directory inside the container
 WORKDIR /app
 
