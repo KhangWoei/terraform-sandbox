@@ -1,7 +1,5 @@
 FROM mariadb:latest
 
-ENV MARIADB_ROOT_PASSWORD=P455w07d!
-
 # Set the working directory inside the container
 WORKDIR /app
 
