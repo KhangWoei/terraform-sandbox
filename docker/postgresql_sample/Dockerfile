@@ -3,7 +3,6 @@ FROM postgres:latest
 
 # Set the working directory inside the container
 WORKDIR /app
-ENV POSTGRES_PASSWORD=P455w07d!
 
 # Copy your scripts into the container
 COPY ./scripts /docker-entrypoint-initdb.d
