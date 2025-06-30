@@ -13,9 +13,9 @@ locals {
 }
 
 resource "random_string" "suffix" {
-    length = 8
-    special = false
-    upper = false
+  length  = 8
+  special = false
+  upper   = false
 }
 
 resource "azurerm_mssql_server" "server" {
@@ -25,4 +25,13 @@ resource "azurerm_mssql_server" "server" {
   administrator_login          = var.admin_username
   administrator_login_password = local.admin_password
   version                      = var.db_version
+}
+
+resource "azurerm_mssql_database" "database" {
+  name         = "azuresql-test-db-${random_string.suffix.result}"
+  server_id    = azurerm_mssql_server.server.id
+  collation    = "SQL_Latin1_General_CS_AS"
+  max_size_gb  = 4
+  sku_name     = "S0"
+  license_type = "LicenseIncluded"
 }
