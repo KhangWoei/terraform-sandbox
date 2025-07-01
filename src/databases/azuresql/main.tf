@@ -34,6 +34,7 @@ resource "azurerm_mssql_database" "database" {
   max_size_gb  = 4
   sku_name     = "S0"
   license_type = "LicenseIncluded"
+  geo_backup_enabled = false
 }
 
 # Temporary firewall rule to allow all IPs
