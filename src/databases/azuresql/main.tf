@@ -38,10 +38,9 @@ resource "azurerm_mssql_database" "database" {
 
 # Temporary firewall rule to allow all IPs
 # Note: This should be replaced with more secure rules in production environments.
-resource "azurerm_sql_firewall_rule" "firewall" {
-  name                = "AllowAllIPs"
-  resource_group_name = var.resource_group.name
-  server_name         = azurerm_mssql_server.server.name
+resource "azurerm_mssql_firewall_rule" "firewall" {
+  name                = "AllowAllIPs" 
+  server_id = azurerm_mssql_server.server.id
   start_ip_address    = "0.0.0.0"
   end_ip_address      = "255.255.255.255"
 }
