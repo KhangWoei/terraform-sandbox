@@ -1,36 +1,87 @@
-resource "random_password" "admin_password" {
-  count       = var.admin_details.password == null ? 1 : 0
-  length      = 20
-  special     = true
-  min_numeric = 1
-  min_upper   = 1
-  min_lower   = 1
-  min_special = 1
-}
-
 resource "random_string" "suffix" {
   length  = 8
   special = false
   upper   = false
 }
 
-data "aws_rds_orderable_db_instance" "sqlserver" {
-  engine                     = "sqlserver-se"
-  engine_latest_version      = true
-  license_model              = "amazon-license"
-  preferred_instance_classes = ["db.t2.small", "db.t3.small", "db.t2.medium", "db.t3.medium"]
-  storage_type               = "standard"
+data "aws_availability_zones" "available" {
+  state = "available"
 }
 
-resource "aws_db_instance" "sqlserver" {
-  identifier     = "aws-rds-sqlserver-test-server-${random_string.suffix.result}"
-  engine         = data.aws_rds_orderable_db_instance.sqlserver.engine
-  engine_version = data.aws_rds_orderable_db_instance.sqlserver.engine_latest_version
-  instance_class = data.aws_rds_orderable_db_instance.sqlserver.instance_class
-  storage_type   = data.aws_rds_orderable_db_instance.sqlserver.storage_type
+resource "aws_vpc" "test_environment" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
-  username            = var.admin_details.user
-  password            = random_password.admin_password
-  publicly_accessible = true
-  skip_final_snapshot = true
+  tags = {
+    Name = "test-environment-${random_string.suffix.result}"
+  }
 }
+
+resource "aws_internet_gateway" "test_environment_gateway" {
+  vpc_id = aws_vpc.test_environment.id
+
+  tags = {
+    Name = "test-environment-${random_string.suffix.result}"
+  }
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.test_environment.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.test_environment_gateway.id
+  }
+
+  tags = {
+    Name = "test-environment-${random_string.suffix.result}"
+  }
+}
+
+// https://repost.aws/questions/QUB992dLuURtmGzHD_QYQlnw/why-aws-rds-service-needs-two-subnets-from-different-azs
+// https://developer.hashicorp.com/terraform/language/meta-arguments/count <-- 0 indexed
+resource "aws_subnet" "public" {
+  count      = 2
+  vpc_id     = aws_vpc.test_environment.id
+  cidr_block = "10.0.${count.index + 1}.0/24"
+
+  tags = {
+    Name = "test-environment-${random_string.suffix.result}"
+  }
+}
+
+resource "aws_security_group" "rds" {
+  name   = "test_environment_sql_server_rds"
+  vpc_id = aws_vpc.test_environment.id
+
+  ingress {
+    from_port   = 1433
+    to_port     = 1433
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 1433
+    to_port     = 1433
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "test-environment-${random_string.suffix.result}"
+  }
+}
+
+/*
+ * RDS specific 
+ */
+resource "aws_db_subnet_group" "public" {
+  name       = "test_environment"
+  subnet_ids = aws_subnet.public[*].id
+
+  tags = {
+    Name = "test-environment-${random_string.suffix.result}"
+  }
+}
+
