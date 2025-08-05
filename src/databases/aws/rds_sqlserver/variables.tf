@@ -1,8 +1,3 @@
-variable "aws_region" {
-  type     = string
-  nullable = false
-}
-
 variable "admin_details" {
   type = object({
     username = string
