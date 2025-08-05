@@ -8,6 +8,11 @@
     - Isolates network segments 
     - Reduces congestion and so performance and speed as we ensure traffic destined for a subnet stays in said subnet, and deals with broadcast packets.
 
+#### 1.1 Classless inter-domain routing
+- Describing IP address ranges usinga compact notation
+- `IP_ADDRESS/PREFIX_LENGTH`, where `PREFIX_LENGTH`indicates how many bits are "fixed", being reserved for the network portion.
+- Often 1.0.x.x are public IP address and 10.0.x.x (RFC 1918) are private and is safe to be used internally, hence `10.0.0.0/16`
+
 ### 2. [Route tables](https://en.wikipedia.org/wiki/Routing_table)
 - Set of rules used to determine where network traffic is directed. 
 - Each subnet can have its own route table, will use the VPCs route table by default
