@@ -41,9 +41,10 @@ resource "aws_route_table" "public" {
 // https://repost.aws/questions/QUB992dLuURtmGzHD_QYQlnw/why-aws-rds-service-needs-two-subnets-from-different-azs
 // https://developer.hashicorp.com/terraform/language/meta-arguments/count <-- 0 indexed
 resource "aws_subnet" "public" {
-  count      = 2
-  vpc_id     = aws_vpc.test_environment.id
-  cidr_block = "10.0.${count.index + 1}.0/24"
+  count             = 2
+  vpc_id            = aws_vpc.test_environment.id
+  cidr_block        = "10.0.${count.index}.0/24"
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
     Name = "test-environment-${random_string.suffix.result}"
