@@ -51,6 +51,12 @@ resource "aws_subnet" "public" {
   }
 }
 
+resource "aws_route_table_association" "public_subnet_to_public_route_tables" {
+  count          = length(aws_subnet.public)
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public.id
+}
+
 resource "aws_security_group" "rds" {
   name   = "test_environment_sql_server_rds"
   vpc_id = aws_vpc.test_environment.id
