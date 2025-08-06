@@ -94,13 +94,14 @@ data "aws_rds_orderable_db_instance" "sqlserver" {
 }
 
 resource "random_password" "admin_password" {
-  count       = var.admin_details.password == null ? 1 : 0
-  length      = 20
-  special     = true
-  min_numeric = 1
-  min_upper   = 1
-  min_lower   = 1
-  min_special = 1
+  count            = var.admin_details.password == null ? 1 : 0
+  length           = 20
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+  min_numeric      = 1
+  min_upper        = 1
+  min_lower        = 1
+  min_special      = 1
 
 }
 
