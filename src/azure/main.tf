@@ -37,11 +37,10 @@ resource "azurerm_mssql_server" "server" {
 #   geo_backup_enabled = false
 # }
 
-# Temporary firewall rule to allow all IPs
-# Note: This should be replaced with more secure rules in production environments.
 resource "azurerm_mssql_firewall_rule" "firewall" {
-  name                = "AllowAllIPs" 
-  server_id = azurerm_mssql_server.server.id
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "255.255.255.255"
+  name             = "AllowAllIPs"
+  server_id        = azurerm_mssql_server.server.id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "255.255.255.255"
 }
+
