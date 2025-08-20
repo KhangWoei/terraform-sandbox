@@ -31,6 +31,7 @@ resource "aws_route_table" "public_route" {
 
   tags = {
     Name = "${random_string.suffix.result}"
+    Type = "public"
   }
 }
 

@@ -4,15 +4,9 @@ resource "random_string" "suffix" {
   upper   = false
 }
 
-resource "aws_route_table_association" "public_subnet_to_public_route_tables" {
-  count          = length(aws_subnet.public)
-  subnet_id      = aws_subnet.public[count.index].id
-  route_table_id = aws_route_table.public.id
-}
-
-resource "aws_security_group" "rds" {
-  name   = "test_environment_sql_server_rds"
-  vpc_id = aws_vpc.test_environment.id
+resource "aws_security_group" "rds_sqlserver_security_group" {
+  name   = "sqlserver-security-group-${random_string.sufix.result}"
+  vpc_id = data.aws_vpc.vpc.id
 
   ingress {
     from_port   = 1433
@@ -29,7 +23,7 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name = "test-environment-${random_string.suffix.result}"
+    Name = "rds-sqlserver-${random_string.suffix.result}"
   }
 }
 
@@ -38,18 +32,11 @@ resource "aws_security_group" "rds" {
  */
 resource "aws_db_subnet_group" "public" {
   name       = "test_environment"
-  subnet_ids = aws_subnet.public[*].id
+  subnet_ids = data.aws_subnet.public_subnets.ids
 
   tags = {
-    Name = "test-environment-${random_string.suffix.result}"
+    Name = "rds-sqlserver-${random_string.suffix.result}"
   }
-}
-
-data "aws_rds_orderable_db_instance" "sqlserver" {
-  engine                     = "sqlserver-ex"
-  license_model              = "license-included"
-  preferred_instance_classes = ["db.t3.large", "db.t3.medium", "db.t3.small"]
-  storage_type               = "standard"
 }
 
 resource "random_password" "admin_password" {
@@ -65,7 +52,7 @@ resource "random_password" "admin_password" {
 }
 
 resource "aws_db_instance" "sqlserver" {
-  identifier = "aws-rds-sqlserver-test-server-${random_string.suffix.result}"
+  identifier = "rds-sqlserver-${random_string.suffix.result}"
   username   = var.admin_details.username
   password   = try(random_password.admin_password[0].result, var.admin_details.password)
 
@@ -87,6 +74,6 @@ resource "aws_db_instance" "sqlserver" {
   backup_retention_period = 0
 
   tags = {
-    Name = "test-environment-${random_string.suffix.result}"
+    Name = "rds-sqlserver-${random_string.suffix.result}"
   }
 }
