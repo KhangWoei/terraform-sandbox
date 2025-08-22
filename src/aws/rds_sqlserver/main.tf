@@ -5,7 +5,7 @@ resource "random_string" "suffix" {
 }
 
 resource "aws_security_group" "rds_sqlserver_security_group" {
-  name   = "sqlserver-security-group-${random_string.sufix.result}"
+  name   = "rds-sqlserver-security-group-${random_string.suffix.result}"
   vpc_id = data.aws_vpc.vpc.id
 
   ingress {
@@ -31,8 +31,8 @@ resource "aws_security_group" "rds_sqlserver_security_group" {
  * RDS specific 
  */
 resource "aws_db_subnet_group" "public" {
-  name       = "test_environment"
-  subnet_ids = data.aws_subnet.public_subnets.ids
+  name       = "rds-sqlserver-db-subnet-group-${random_string.suffix.result}"
+  subnet_ids = data.aws_subnets.public_subnets.ids
 
   tags = {
     Name = "rds-sqlserver-${random_string.suffix.result}"
