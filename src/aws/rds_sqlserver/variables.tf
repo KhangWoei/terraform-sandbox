@@ -1,6 +1,6 @@
 variable "profile" {
   type    = string
-  default = "default"
+  default = null
 }
 
 variable "region" {
@@ -9,8 +9,8 @@ variable "region" {
 }
 
 variable "vpc_id" {
-  type     = string
-  nullable = false
+  type    = string
+  default = null
 }
 
 variable "admin_details" {
@@ -23,3 +23,4 @@ variable "admin_details" {
     password = null
   }
 }
+

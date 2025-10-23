@@ -6,7 +6,7 @@ resource "random_string" "suffix" {
 
 resource "aws_security_group" "rds_sqlserver_security_group" {
   name   = "rds-sqlserver-security-group-${random_string.suffix.result}"
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = local.vpc_id
 
   ingress {
     from_port   = 1433
@@ -27,11 +27,8 @@ resource "aws_security_group" "rds_sqlserver_security_group" {
   }
 }
 
-/*
- * RDS specific 
- */
 resource "aws_db_subnet_group" "public" {
-  name       = "rds-sqlserver-db-subnet-group-${random_string.suffix.result}"
+  name       = "rds-sqlserver-subnet-${random_string.suffix.result}"
   subnet_ids = data.aws_subnets.public_subnets.ids
 
   tags = {
@@ -66,7 +63,7 @@ resource "aws_db_instance" "sqlserver" {
 
   db_subnet_group_name   = aws_db_subnet_group.public.name
   multi_az               = false
-  vpc_security_group_ids = [aws_security_group.rds.id]
+  vpc_security_group_ids = [aws_security_group.rds_sqlserver_security_group.id]
 
   publicly_accessible = true
   skip_final_snapshot = true
